@@ -1,0 +1,104 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %}
+
+{% block content %}
+    <h1 align="center">Your Links</h1>
+    <ul class="list-group list-group-flush" id="links">
+        {% for link in user.links  %}
+        <li class="list-group-item"><b>Custom Link:</b> <i>{{ link.custom }}</i>
+            <button 
+                type="button" 
+                class="close" 
+                onClick="deleteLink({{ link.id }})"
+            >
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <button 
+                type="button" 
+                class="bi-arrows-expand" 
+                style="background-color: transparent; outline: none; border: none; padding-right: 9px; transform: scale(1.1); float: right;" 
+                data-toggle="collapse" 
+                data-target="#expand_{{ link.id }}" 
+                aria-expanded="false" 
+                aria-controls="expand_{{ link.id }}"
+            >
+            </button>
+            <button 
+                type="button" 
+                class="bi-pencil-square" 
+                style="background-color: transparent; outline: none; border: none; padding-right: 8.5px; transform: scale(1.1); float: right;"
+                onClick="editLink({{ link.id }}, '{{ link.custom }}', '{{ link.playstore }}', '{{ link.appstore }}', '{{ link.fallback }}')"
+            ></button>
+        </li>
+        <div class="collapse" id="expand_{{ link.id }}">
+            <li class="list-group-item"><b>Playstore:</b> <i>{{ link.playstore }}</i></li>
+            <li class="list-group-item"><b>Appstore:</b> <i>{{ link.appstore }}</i></li>
+            <li class="list-group-item"><b>Fallback:</b> <i>{{ link.fallback }}</i></li>
+        </div>
+        <br />
+        {% endfor %}
+    </ul>
+    <form method="POST" id="link">
+        <div class="form-group">
+            <br />
+            <h3 id="linkFormHeading">New Link</h3>
+            <label for="custom">Custom URL</label>
+            <input 
+                type="text"
+                class="form-control" 
+                id="custom" 
+                name="custom" 
+                value="http://127.0.0.1:5000/"
+            />
+        </div>
+            <div class="form-group">
+                <label for="android">Andriod Link</label>
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    id="android" 
+                    name="android" 
+                    placeholder="https://play.google.com/....."
+                />
+            </div>
+            <div class="form-group">
+                <label for="apple">Apple Link</label>
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    id="apple" 
+                    name="apple" 
+                    placeholder="https://apps.apple.com/...."
+                />
+            </div>
+            <div class="form-group">
+                <label for="fallback">Fallback Link</label>
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    id="fallback" 
+                    name="fallback" 
+                    placeholder="https://<sample-link>"
+                />
+            </div>
+            <div id="buttonContainer" class="d-flex">
+                <button type="submit" class="btn btn-primary" id="submitButton">Add Link</button>
+                <button type="button" class="btn btn-primary" id="cancelButton" style="display: none; margin-left: 20px;">Cancel</button>
+            </div>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const customInput = document.getElementById('custom');
+
+            const constantPrefix = 'http://127.0.0.1:5000/';
+
+            customInput.addEventListener('input', function(event) {
+                const inputValue = event.target.value;
+
+                if (!inputValue.startsWith(constantPrefix)) {
+                    event.target.value = constantPrefix + inputValue.substr(constantPrefix.length);
+                }
+            });
+        });
+    </script>
+{% endblock %}
