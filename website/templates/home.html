@@ -4,6 +4,11 @@
     <h1 align="center">Your Links</h1>
     <ul class="list-group list-group-flush" id="links">
         {% for link in user.links  %}
+        {% if link.custom in qr_codes %}
+        <div class="qr-code">
+            <img src="data:image/png;base64,{{ qr_codes[link.custom] }}" alt="QR Code">
+        </div>
+        {% endif %}
         <li class="list-group-item"><b>Custom Link:</b> <i>{{ link.custom }}</i>
             <button 
                 type="button" 
@@ -28,6 +33,11 @@
                 style="background-color: transparent; outline: none; border: none; padding-right: 8.5px; transform: scale(1.1); float: right;"
                 onClick="editLink({{ link.id }}, '{{ link.custom }}', '{{ link.playstore }}', '{{ link.appstore }}', '{{ link.fallback }}')"
             ></button>
+            <div><b>Clicks: </b>{{ link.custom_link_clicks }}</div>
+            <div><b>iOS Redirects: </b>{{ link.ios_redirects }}</div>
+            <div><b>Android Redirects: </b>{{ link.android_redirects }}</div>
+            <div><b>Fallback Redirects: </b>{{ link.fallback_redirects }}</div>
+           
         </li>
         <div class="collapse" id="expand_{{ link.id }}">
             <li class="list-group-item"><b>Playstore:</b> <i>{{ link.playstore }}</i></li>
@@ -47,7 +57,7 @@
                 class="form-control" 
                 id="custom" 
                 name="custom" 
-                value="http://127.0.0.1:5000/"
+                value="https://unity.saurojit.com/"
             />
         </div>
             <div class="form-group">
@@ -90,7 +100,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const customInput = document.getElementById('custom');
 
-            const constantPrefix = 'http://127.0.0.1:5000/';
+            const constantPrefix = 'https://unity.saurojit.com/';
 
             customInput.addEventListener('input', function(event) {
                 const inputValue = event.target.value;
@@ -100,5 +110,28 @@
                 }
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('link');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const customInput = document.getElementById('custom');
+            const customValue = customInput.value.trim();
+            const appstorelink = (document.getElementById('apple')).value.trim();
+            const playstorelink = (document.getElementById('android')).value.trim();
+            const fallbacklink = (document.getElementById('fallback')).value.trim();
+
+            let invalidLinkDetected = false;
+
+            if (customValue === 'https://unity.saurojit.com/') {
+                alert('Custom URL cannot be empty');
+                return; 
+            }
+
+            form.submit();
+        });
+    });
     </script>
 {% endblock %}

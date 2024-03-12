@@ -8,6 +8,10 @@ class Linking(db.Model):
     appstore = db.Column(db.String(10000))
     fallback = db.Column(db.String(10000))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    custom_link_clicks = db.Column(db.Integer, default=0)
+    ios_redirects = db.Column(db.Integer, default=0)
+    android_redirects = db.Column(db.Integer, default=0)
+    fallback_redirects = db.Column(db.Integer, default=0)
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
